@@ -6,4 +6,10 @@
    <url>
       <loc>https://my-webapp-4439.onrender.com/signup</loc>
    </url>
+   <url>
+      <loc>https://my-webapp-4439.onrender.com/user</loc>
+   </url>
+   <url>
+      <loc>https://my-webapp-4439.onrender.com/admin</loc>
+   </url>
 </urlset>
