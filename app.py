@@ -22,6 +22,33 @@ def google_verify():
 def sitemap():
     return send_from_directory('.', 'sitemap.xml')
 
+@app.route("/run_app")
+def run_app():
+    user_id = session["user_id"]
+
+    program_path = os.path.expanduser("~/WaBuMe/wabume.py")
+
+    if os.path.exists(program_path):
+        os.system(f"start python {program_path}")
+    else:
+        # ما لقى الملف → رجّع اليوزر يحمل البرنامج
+        return redirect(url_for("user_dashboard"))
+
+    return "جاري تشغيل التطبيق..."
+
+@app.route("/mark_downloaded")
+def mark_downloaded():
+    user_id = session["user_id"]
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET downloaded=1 WHERE id=?", (user_id,))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("user_dashboard"))
+
+
 
 DB_PATH = "database/users.db"
 
@@ -205,7 +232,7 @@ def user_dashboard():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT username, status, recovery_code, sent_msg FROM users WHERE id=?", (user_id,))
+    cursor.execute("SELECT username, status, recovery_code, sent_msg, downloaded FROM users WHERE id=?", (user_id,))
     row = cursor.fetchone()
 
     if not row:
@@ -213,9 +240,7 @@ def user_dashboard():
         flash("المستخدم غير موجود!", "error")
         return redirect(url_for("login"))
 
-    username, status, code, sent_msg = row
-
-    script_path = os.path.join("automation", "wabume.py")
+    username, status, code, sent_msg, downloaded = row
 
     if status == "pending":
         conn.close()
@@ -233,7 +258,8 @@ def user_dashboard():
                            username=username,
                            status=status,
                            recovery_code=code,
-                           program_file=url_for('static', filename='automation/wabume.py'))
+                           downloaded=downloaded,
+                           program_file=url_for('static', filename='WaBuMe.zip'))
 
 # ----------------- Admin Accept / Reject -----------------
 @app.route("/admin_action", methods=["POST"])
