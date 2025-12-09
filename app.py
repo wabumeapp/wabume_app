@@ -15,7 +15,11 @@ def home():
 
 @app.route('/google13f31b5e24964739.html')
 def google_verify():
-    return send_from_directory('static', 'google13f31b5e24964739.html')
+    return send_from_directory('.', 'google13f31b5e24964739.html')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('.', 'sitemap.xml')
 
 
 DB_PATH = "database/users.db"
@@ -211,7 +215,7 @@ def user_dashboard():
     username, status, code, sent_msg = row
 
     import subprocess, threading, time
-    script_path = os.path.join("automation", "wa_bulk.py")
+    script_path = os.path.join("automation", "wabume.py")
 
     if status == "pending":
         conn.close()
