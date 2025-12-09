@@ -205,7 +205,7 @@ def user_dashboard():
     username, status, code, sent_msg = row
 
     import subprocess, threading, time
-    script_path = os.path.join("automation", "whatsapp_bulk_messenger.py")
+    script_path = os.path.join("automation", "wa_bulk.py")
 
     if status == "pending":
         conn.close()
