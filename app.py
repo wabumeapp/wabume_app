@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import request, render_template, redirect, url_for, flash, session
 import sqlite3
 from datetime import datetime
 import os
@@ -6,10 +7,6 @@ import subprocess
 
 app = Flask(__name__)
 app.secret_key = "secretkey123"  # لتشفير session
-
-@app.route('/')
-def home():
-    return render_template('login.html')  # أو أي صفحة موجودة
 
 DB_PATH = "database/users.db"
 
@@ -296,7 +293,7 @@ def admin_action():
     conn.close()
     flash("خطأ غير متوقع.", "error")
     return redirect(url_for("admin_dashboard"))
-  
+    
 # ----------------- Logout -----------------
 @app.route("/logout")
 def logout():
@@ -307,6 +304,4 @@ def logout():
 
 # ----------------- Run App -----------------
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-
+    app.run(debug=True)
