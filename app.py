@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from flask import request, render_template, redirect, url_for, flash, session
 import sqlite3
 from datetime import datetime
 import os
@@ -304,5 +303,5 @@ def logout():
 
 # ----------------- Run App -----------------
 if __name__ == "__main__":
-    app.run(debug=True)
-
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
