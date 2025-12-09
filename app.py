@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask import request, render_template, redirect, url_for, flash, session
 from flask import send_from_directory
 import sqlite3
+import subprocess, threading, time
 from datetime import datetime
 import os
 import subprocess
@@ -214,7 +215,6 @@ def user_dashboard():
 
     username, status, code, sent_msg = row
 
-    import subprocess, threading, time
     script_path = os.path.join("automation", "wabume.py")
 
     if status == "pending":
