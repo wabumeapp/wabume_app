@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask import request, render_template, redirect, url_for, flash, session
+from flask import send_from_directory
 import sqlite3
 from datetime import datetime
 import os
@@ -11,6 +12,11 @@ app.secret_key = "secretkey123"  # لتشفير session
 @app.route("/")
 def home():
     return redirect(url_for("login"))
+
+@app.route('/google13f31b5e24964739.html')
+def google_verify():
+    return send_from_directory('static', 'google13f31b5e24964739.html')
+
 
 DB_PATH = "database/users.db"
 
