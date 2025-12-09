@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>لوحة إدارة المستخدمين</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body { 
+    font-family: "Trebuchet MS", sans-serif; 
+    direction: rtl; 
+    background:#F0F2F5; 
+    text-align:center; 
+    padding:30px; 
+}
+.container { 
+    background:#FFFFFF; 
+    width:800px; 
+    margin:auto; 
+    padding:25px; 
+    border-radius:10px; 
+    box-shadow:0 0 12px rgba(0,0,0,0.15); 
+}
+h2, h3 { 
+    color:#3B4A54; 
+    margin-bottom:20px; 
+}
+table { 
+    width:100%; 
+    border-collapse:collapse; 
+    margin-top:20px; 
+}
+th, td { 
+    border:1px solid #E0E0E0; 
+    padding:10px; 
+    color:#3B4A54;
+}
+th { 
+    background:#128C7E; 
+    color:white; 
+}
+.success { 
+    color:#25D366; 
+}
+.error { 
+    color:#D21B2A; 
+}
+button { 
+    padding:5px 10px; 
+    border:none; 
+    border-radius:5px; 
+    cursor:pointer; 
+    margin:2px; 
+    font-weight:bold;
+}
+.accept { 
+    background:#25D366; 
+    color:white; 
+}
+.accept:hover {
+    background:#128C7E;
+}
+.reject { 
+    background:#D21B2A; 
+    color:white; 
+}
+.reject:hover {
+    background:#AA1717;
+}
+a {
+    color: #21a091;
+}
+a:hover {
+color: #075E54;;
+}
+
+a.logout { 
+    display:inline-block; 
+    margin-top:15px; 
+    text-decoration:none; 
+    color:#128C7E; 
+}
+a.logout:hover {
+    color:#075E54;
+}
+
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>لوحة إدارة المستخدمين</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="messages">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+<h3>طلبات التسجيل الجديدة:</h3>
+<table>
+  <tr>
+    <th>Username</th>
+    <th>تاريخ التسجيل</th>
+    <th>Action</th>
+  </tr>
+  {% for user in pending_users %}
+  <tr>
+    <td>{{ user[1] }}</td>
+    <td>{{ user[2] }}</td>
+    <td>
+      <form method="POST" action="{{ url_for('admin_action') }}">
+        <input type="hidden" name="user_id" value="{{ user[0] }}">
+        <button name="action" value="accept">قبول</button>
+        <button name="action" value="reject">رفض</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+    <h3>المستخدمون القدامى</h3>
+    <table>
+        <tr>
+            <th> اسم المستخدم </th>
+            <th> تاريخ التسجي </th>
+            <th> Details </th>
+        </tr>
+        {% for user in accepted_users %}
+        <tr>
+            <td>{{ user[1] }}</td>  <!-- username -->
+            <td>{{ user[4] }}</td>  <!-- created_at -->
+            <td><a href="{{ url_for('user_details', user_id=user[0]) }}">Details</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a class="logout" href="{{ url_for('logout') }}">تسجيل الخروج</a>
+</div>
+</body>
+</html>

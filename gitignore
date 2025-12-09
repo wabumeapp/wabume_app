@@ -1,0 +1,36 @@
+# ملفات بايثون المؤقتة
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+
+# ملفات النظام
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# مجلدات ويندوز خاصة بالمستخدم
+Local Settings/
+My Documents/
+NetHood/
+PrintHood/
+Recent/
+SendTo/
+Start Menu/
+Templates/
+
+# مجلدات PyCharm/VSCode
+.idea/
+.vscode/
+
+# ملفات SQLite أو قواعد بيانات لو حابب
+*.db
+
+# ملفات مؤقتة عامة
+*.log
+*.tmp
+*.bak
+
+# ملفات Selenium/ChromeDriver لو موجودة
+chromedriver.exe

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>Create a New Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        body {
+            background: #f0f2f5;
+            font-family: "Trebuchet MS", sans-serif;
+            direction: rtl;
+            text-align: center;
+            padding-top: 60px;
+        }
+
+        .container {
+            background: #FFFFFF;
+            width: 350px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 12px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #3B4A54;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 5px;
+            border: 1px solid #E0E0E0;
+        }
+
+        input:focus {
+            background-color: #25D36633;  
+            border: 1px solid #128C7E;   
+            outline: none;               
+        }
+
+        button {
+            width: 95%;
+            background: #128C7E;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #075E54;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+        .messages li {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #d4ffd9;
+            color: #0d7a2f;
+            border: 1px solid #7cd68d;
+        }
+
+        .error {
+            background: #ffd4d4;
+            color: #a90000;
+            border: 1px solid #dd7a7a;
+        }
+
+        .info {
+            background: #e6f1ff;
+            color: #003d80;
+            border: 1px solid #7aa7dd;
+        }
+
+        a {
+            color: #128C7E;
+        }
+
+        a:hover {
+            color: #075E54;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>إنشاء حساب جديد</h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- رسالة تحويل بعد التسجيل -->
+    {% if username_exists %}
+        <p class="info">
+            سيتم تحويلك إلى صفحة تسجيل الدخول خلال  
+            <span id="countdown">5</span> ثوانٍ
+        </p>
+        <script>
+            let timeLeft = 5;
+            let countdownElem = document.getElementById('countdown');
+
+            let timer = setInterval(() => {
+                timeLeft--;
+                countdownElem.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    window.location.href = "{{ url_for('login') }}";
+                }
+            }, 1000);
+        </script>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('signup') }}">
+        <label>اسم المستخدم:</label><br>
+        <input type="text" name="username" required><br><br>
+
+        <label>كلمة المرور:</label><br>
+        <input type="password" name="password" required><br><br>
+
+        <button type="submit">إنشاء الحساب</button>
+    </form>
+
+    <p>لديك حساب؟ <a href="{{ url_for('login') }}">تسجيل الدخول</a></p>
+</div>
+
+</body>
+</html>

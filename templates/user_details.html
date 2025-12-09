@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>تفاصيل المستخدم</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body {
+    font-family:"Trebuchet MS", sans-serif;
+    direction: rtl;
+    background:#F0F2F5;
+    text-align:center;
+    padding:30px;
+}
+.container {
+    background:#FFFFFF;
+    width:600px;
+    margin:auto;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 12px rgba(0,0,0,0.15);
+}
+h2, h3 {
+    color:#3B4A54;
+    margin-bottom:20px;
+}
+p, li {
+    color:#3B4A54;
+    font-size:14px;
+    line-height:1.5;
+}
+.status {
+    font-weight:bold;
+}
+.status.accepted { color:#25D366; }
+.status.rejected { color:#D21B2A; }
+.status.info { color:#1AB5D0; }
+ul {
+    text-align:right;
+    padding-right:20px;
+}
+a {
+    display:inline-block;
+    margin-top:20px;
+    text-decoration:none;
+    color:#128C7E;
+    font-weight:bold;
+}
+a:hover {
+    color:#075E54;
+}
+strong.user {
+    color:#128C7E;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h2> تفاصيل المستخدم:<strong class="user"> {{ username }} </strong> </h2>
+
+    <p>تاريخ التسجيل: {{ created_at }}</p>
+    <p>حالة الحساب: {{ status }}</p>
+
+    {% if status == 'accepted' %}
+    <p>كود استرجاع كلمة المرور: <strong>{{ recovery_code }}</strong></p>
+    {% endif %}
+    <p>------------------------------------------------------------</p>
+    <h3>الرسائل المرسلة:</h3>
+    {% if messages %}
+        <ul>
+            {% for msg in messages %}
+            <li>{{ msg }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>لا توجد رسائل حتى الآن.</p>
+    {% endif %}
+
+    <a href="{{ url_for('admin_dashboard') }}">العودة للوحة الإدارة</a>
+</div>
+</body>
+</html>

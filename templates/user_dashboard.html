@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>لوحة المستخدم</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body { 
+    font-family:"Trebuchet MS", sans-serif; 
+    direction: rtl; 
+    background:#F0F2F5; 
+    text-align:center; 
+    padding:30px; 
+}
+
+.container { 
+    background:#FFFFFF; 
+    width:500px; 
+    margin:auto; 
+    padding:25px; 
+    border-radius:10px; 
+    box-shadow:0 0 12px rgba(0,0,0,0.15); 
+}
+
+h2 { 
+    color:#3B4A54; 
+    margin-bottom:20px; 
+}
+
+.status { 
+    font-weight:bold; 
+    margin-top:10px; 
+}
+
+.success { 
+    color:#128C7E; 
+}
+
+.error { 
+    color:#D21B2A; 
+}
+
+.info { 
+    color:#1AB5D0; 
+}
+
+a.logout { 
+    display:inline-block; 
+    margin-top:20px; 
+    text-decoration:none; 
+    color:#128C7E; 
+}
+
+a.logout:hover {
+    color:#075E54;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+    <h2>أهلاً ومرحبا {{ username }}!</h2>
+
+    <p>حالة حسابك: 
+        <span class="{{ 'success' if status=='accepted' else ('error' if status=='rejected' else 'info') }}">{{ status }}</span>
+    </p>
+
+    {% if status != 'accepted' %}
+        <p class="info">سيتمكن المستخدمون من الوصول إلى النظام فقط بعد قبول الإدارة.</p>
+    {% endif %}
+
+    {% if status == "accepted" and recovery_code %}
+        <p>❗ الرجاء أخذ Screenshot لهذا الكود (استخدمه بحال نسيت الباسورد): {{ recovery_code }}</p>
+        <p class="info">البرنامج سيبدأ تلقائياً بعد 10 ثواني.</p>
+    {% endif %}
+
+    <a class="logout" href="{{ url_for('logout') }}">تسجيل الخروج</a>
+</div>
+</body>
+</html>
