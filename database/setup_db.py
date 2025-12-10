@@ -39,8 +39,6 @@ print("Database created successfully! ✅")
 print(f"Admin account -> Username: {admin_username} | Password: admin123")
 
 # ----------------- إضافة عمود recovery_code لو مش موجود -----------------
-import sqlite3
-
 DB_PATH = "database/users.db"
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
@@ -61,8 +59,6 @@ conn.commit()
 conn.close()
 
 # ----------------- إضافة عمود sent_msg لو مش موجود -----------------
-import sqlite3
-
 DB_PATH = "database/users.db"
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
@@ -77,19 +73,14 @@ conn.close()
 
 
 # ----------------- downloaded row -----------------
-import sqlite3
-
 DB_PATH = "database/users.db"
-
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
-# إضافة العمود إذا لم يكن موجود مسبقًا
 try:
     cursor.execute("ALTER TABLE users ADD COLUMN downloaded INTEGER DEFAULT 0")
-    print("تم إضافة العمود downloaded بنجاح")
-except sqlite3.OperationalError:
-    print("العمود downloaded موجود مسبقًا")
+except:
+    pass
 
 conn.commit()
 conn.close()

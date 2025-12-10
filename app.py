@@ -259,6 +259,7 @@ def user_dashboard():
         flash("المستخدم غير موجود!", "error")
         return redirect(url_for("login"))
 
+    print(row) 
     username, status, code, sent_msg, downloaded = row
 
     if status == "pending":
