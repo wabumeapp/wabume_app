@@ -245,7 +245,7 @@ def user_dashboard():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT username, status, recovery_code, sent_msg, downloaded FROM users WHERE id=?", (user_id,))
+    cursor.execute("SELECT username, status, recovery_code, sent_msg, COALESCE(downloaded,0) FROM users WHERE id=?", (user_id,))
     row = cursor.fetchone()
 
     if not row:
