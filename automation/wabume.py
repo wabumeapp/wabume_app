@@ -414,7 +414,7 @@ def init_driver():
 
 # --- Save Sent Messages Log ---
 def log_message(phone, message):
-    """Logs each sent message into PyWhatKit_DB.txt with date, time, number, and content"""
+    """Logs each sent message into DetailsGage with date, time, number, and content"""
     from datetime import datetime
     now = datetime.now()
     date_str = now.strftime("%Y-%m-%d")
