@@ -74,17 +74,7 @@ a.logout:hover {
 
     {% if status == "accepted" and recovery_code %}
         <p>❗ الرجاء أخذ Screenshot لهذا الكود (استخدمه بحال نسيت الباسورد): {{ recovery_code }}</p>
-
-        {% if not downloaded %}
-        <p>❗ الرجاء تحميل البرنامج لأول مرة:</p>
-        <a class="btn" href="{{ program_file }}" download>تحميل WaBuMe.zip</a>
-        <br><br>
-        <a class="btn" href="{{ url_for('mark_downloaded') }}">تم التنزيل؟ اضغط هنا</a>
-
-        {% else %}
-        <p>✅ تم تنزيل البرنامج! يمكنك تشغيله الآن:</p>
-        <a class="btn" href="{{ url_for('run_app') }}">تشغيل البرنامج</a>
-        {% endif %}
+        <p class="info">البرنامج سيبدأ تلقائياً بعد 10 ثواني.</p>
     {% endif %}
 
     <a class="logout" href="{{ url_for('logout') }}">تسجيل الخروج</a>

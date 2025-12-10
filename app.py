@@ -24,47 +24,6 @@ def sitemap():
 
 DB_PATH = "database/users.db"
 
-
-#------------------------------------------------------
-#لتشغيل البرنامج (لو موجود على جهاز اليوزر):
-@app.route("/run_app")
-def run_app():
-    user_id = session.get("user_id")
-    if not user_id:
-        flash("يجب تسجيل الدخول أولاً!", "error")
-        return redirect(url_for("login"))
-
-    # المسار المتوقع للبرنامج على جهاز اليوزر
-    program_path = os.path.expanduser("~/WaBuMe/wabume.py")
-
-    if os.path.exists(program_path):
-        os.system(f"start python {program_path}")  # Windows
-    else:
-        # إذا الملف غير موجود → يرجع للصفحة لتحميله
-        return redirect(url_for("user_dashboard"))
-
-    return "جاري ت" \
-    "شغيل التطبيق..."
-
-#لتعليم أن اليوزر نزّل البرنامج:
-@app.route("/mark_downloaded")
-def mark_downloaded():
-    user_id = session.get("user_id")
-    if not user_id:
-        flash("يجب تسجيل الدخول أولاً!", "error")
-        return redirect(url_for("login"))
-
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("UPDATE users SET downloaded=1 WHERE id=?", (user_id,))
-    conn.commit()
-    conn.close()
-
-    flash("تم تنزيل الملف بنجاح! يمكنك الآن تشغيل البرنامج.", "success")
-    return redirect(url_for("user_dashboard"))
-#------------------------------------------------------
-
-
 # ----------------- Signup -----------------
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -245,7 +204,7 @@ def user_dashboard():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT username, status, recovery_code, sent_msg, COALESCE(downloaded,0) FROM users WHERE id=?", (user_id,))
+    cursor.execute("SELECT username, status, recovery_code, sent_msg FROM users WHERE id=?", (user_id,))
     row = cursor.fetchone()
 
     if not row:
@@ -253,8 +212,10 @@ def user_dashboard():
         flash("المستخدم غير موجود!", "error")
         return redirect(url_for("login"))
 
-    print(row) 
-    username, status, code, sent_msg, downloaded = row
+    username, status, code, sent_msg = row
+
+    import subprocess, threading, time
+    script_path = os.path.join("automation", "whatsapp_bulk_messenger.py")
 
     if status == "pending":
         conn.close()
@@ -268,12 +229,30 @@ def user_dashboard():
         return redirect(url_for("login"))
 
     # status == accepted
-    return render_template("user_dashboard.html",
-                           username=username,
-                           status=status,
-                           recovery_code=code,
-                           downloaded=downloaded,
-                           program_file=url_for('static', filename='WaBuMe.zip'))
+    if sent_msg == 0:
+        # أول login بعد accept → أرسل رسالة الكود
+        cursor.execute("UPDATE users SET sent_msg=1 WHERE id=?", (user_id,))
+        conn.commit()
+        conn.close()
+
+        # دالة لتشغيل البرنامج بعد 10 ثواني
+        def run_script():
+            time.sleep(10)
+            subprocess.Popen(["python", script_path])
+
+        threading.Thread(target=run_script).start()
+
+        # عرض صفحة بها الكود وانتظار المستخدم لعمل SS
+        return render_template("user_dashboard.html",
+                               username=username,
+                               status=status,
+                               recovery_code=code)
+
+    else:
+        # أي login بعد الأول → فتح البرنامج مباشرة بدون أي صفحة
+        conn.close()
+        subprocess.Popen(["python", script_path])
+        return "", 204  # لا تعرض أي HTML
 
 # ----------------- Admin Accept / Reject -----------------
 @app.route("/admin_action", methods=["POST"])

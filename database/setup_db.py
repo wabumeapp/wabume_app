@@ -70,17 +70,3 @@ except:
 
 conn.commit()
 conn.close()
-
-
-# ----------------- downloaded row -----------------
-DB_PATH = "database/users.db"
-conn = sqlite3.connect(DB_PATH)
-cursor = conn.cursor()
-
-try:
-    cursor.execute("ALTER TABLE users ADD COLUMN downloaded INTEGER DEFAULT 0")
-except:
-    pass
-
-conn.commit()
-conn.close()
