@@ -25,18 +25,19 @@ CREATE TABLE IF NOT EXISTS users (
 
 # ----------------- Create default Admin account -----------------
 admin_username = "admin"
-admin_password = generate_password_hash("1234")   # Encrypt password
+admin_password = "1234"
+admin_password_hash = generate_password_hash(admin_password)  # Encrypt password
 
 cursor.execute("""
 INSERT OR IGNORE INTO users (username, password, role, status, created_at)
 VALUES (?, ?, ?, ?, ?)
-""", (admin_username, admin_password, "admin", "accepted", datetime.now()))
+""", (admin_username, admin_password_hash, "admin", "accepted", datetime.now()))
 
 conn.commit()
 conn.close()
 
 print("Database created successfully! ✅")
-print(f"Admin account -> Username: {admin_username} | Password: 1234")
+print(f"Admin account -> Username: {admin_username} | Password: {admin_password} ")
 
 # ----------------- Add recovery_code column if it doesn't exist -----------------
 DB_PATH = "database/users.db"
