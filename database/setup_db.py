@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 # ----------------- Create default Admin account -----------------
 admin_username = "admin"
-admin_password = "1234"
+admin_password = "admin123"
 admin_password_hash = generate_password_hash(admin_password)  # Encrypt password
 
 cursor.execute("""
