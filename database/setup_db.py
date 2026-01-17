@@ -7,6 +7,9 @@ from werkzeug.security import generate_password_hash
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))      # Same directory as this script
 DB_PATH = os.path.join(BASE_DIR, "users.db")
 
+# ----------------- Ensure folder exists -----------------
+os.makedirs(BASE_DIR, exist_ok=True)
+
 # ----------------- Connect to the DB -----------------
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
@@ -19,6 +22,9 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     role TEXT NOT NULL DEFAULT 'user',
     status TEXT NOT NULL DEFAULT 'pending',
+    recovery_code TEXT,
+    sent_msg INTEGER DEFAULT 0,
+    downloaded INTEGER DEFAULT 0,
     created_at TIMESTAMP NOT NULL
 )
 """)
