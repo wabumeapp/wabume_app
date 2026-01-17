@@ -11,6 +11,7 @@ from flask import (
 import sqlite3
 from datetime import datetime
 import os
+import subprocess
 
 app = Flask(__name__)
 app.secret_key = "secretkey123"  # to encrypt the session 
@@ -28,6 +29,8 @@ def sitemap():
     return send_from_directory('.', 'sitemap.xml')
 
 DB_PATH = "database/users.db"
+if not os.path.exists(DB_PATH):
+    subprocess.run(["python", "database/setup_db.py"])
 
 # ----------------- Signup -----------------
 @app.route("/signup", methods=["GET", "POST"])
