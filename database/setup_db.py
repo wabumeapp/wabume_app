@@ -29,6 +29,18 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """)
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS user_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    date TEXT,
+    time TEXT,
+    phone TEXT,
+    message TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+)
+""")
+
 # ----------------- Create default Admin account -----------------
 admin_username = "admin"
 admin_password = "admin123"

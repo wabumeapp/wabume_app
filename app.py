@@ -173,7 +173,7 @@ def admin_dashboard():
     return render_template("admin_dashboard.html", accepted_users=accepted_users, pending_users=pending_users)
 
 # ----------------- Details -----------------
-@app.route("/user/<int:user_id>")
+@app.route("/user_details/<int:user_id>")
 def user_details(user_id):
     if "role" not in session or session["role"] != "admin":
         flash("Unauthorized access!", "error")
