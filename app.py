@@ -13,6 +13,7 @@ from datetime import datetime
 import os
 import subprocess
 from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 app.secret_key = "secretkey123"  # to encrypt the session 
@@ -52,7 +53,7 @@ def signup():
         conn = sqlite3.connect("database/users.db")
         cursor = conn.cursor()
 
-        cursor.execute("SELECT id FROM users WHERE username = ? AND password = ?", (username, password))
+        cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
         exists = cursor.fetchone()
 
         if exists:
@@ -70,10 +71,12 @@ def signup():
             flash("Username already taken, please choose another.", "error")
             return render_template("signup.html")
 
+        hashed_password = generate_password_hash(password)
+
         cursor.execute("""
             INSERT INTO users (username, password, role, status, created_at)
             VALUES (?, ?, ?, ?, ?)
-        """, (username, password, "user", "pending", datetime.now()))
+        """, (username, hashed_password, "user", "pending", datetime.now()))
 
         conn.commit()
         conn.close()
