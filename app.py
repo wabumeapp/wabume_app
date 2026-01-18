@@ -263,8 +263,9 @@ def user_dashboard():
     else:
         # Any login after the first → run the program directly without showing any page
         conn.close()
-        return redirect(url_for("download_page"))
 
+        return render_template("download_page", username=username)
+    
 # ----------------- Download Page -----------------
 @app.route("/download")
 def download_page():
@@ -272,11 +273,12 @@ def download_page():
         flash("Unauthorized access!", "error")
         return redirect(url_for("login"))
 
+    username = session["username"]
     filename = "wabume.exe"   # أو wabume.zip
 
     return render_template(
         "download.html",
-        username=session.get("username"),
+        username=username,
         file_name=filename
     )
 
