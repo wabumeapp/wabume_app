@@ -33,14 +33,12 @@ def sitemap():
 # إنشاء مجلد database لو مش موجود
 os.makedirs("database", exist_ok=True)
 
-# إنشاء DB و admin تلقائيًا لو مش موجود
-if not os.path.exists("database/users.db"):
-    create_db()
-
 DB_PATH = "database/users.db"
+
+# إنشاء DB و admin تلقائيًا لو مش موجود
 if not os.path.exists(DB_PATH):
     subprocess.run(["python", "database/setup_db.py"])
-
+    
 # ----------------- Signup -----------------
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
