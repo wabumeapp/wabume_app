@@ -12,7 +12,6 @@ import sqlite3
 from datetime import datetime
 import os
 import subprocess
-from database.setup_db import create_db  # لو ملف setup_db.py موجود تحت database/
 from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
@@ -38,7 +37,7 @@ DB_PATH = "database/users.db"
 # إنشاء DB و admin تلقائيًا لو مش موجود
 if not os.path.exists(DB_PATH):
     subprocess.run(["python", "database/setup_db.py"])
-    
+
 # ----------------- Signup -----------------
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
