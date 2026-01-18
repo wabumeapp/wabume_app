@@ -12,6 +12,8 @@ import sqlite3
 from datetime import datetime
 import os
 import subprocess
+from database.setup_db import create_db  # لو ملف setup_db.py موجود تحت database/
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "secretkey123"  # to encrypt the session 
@@ -27,6 +29,13 @@ def google_verify():
 @app.route('/sitemap.xml')
 def sitemap():
     return send_from_directory('.', 'sitemap.xml')
+
+# إنشاء مجلد database لو مش موجود
+os.makedirs("database", exist_ok=True)
+
+# إنشاء DB و admin تلقائيًا لو مش موجود
+if not os.path.exists("database/users.db"):
+    create_db()
 
 DB_PATH = "database/users.db"
 if not os.path.exists(DB_PATH):
@@ -93,7 +102,7 @@ def login():
 
         if row:
             user_id, real_password, role, status = row
-            if password == real_password:
+            if check_password_hash(real_password, password):
                 if status != "accepted":
                     flash("Your account has not been approved yet.", "info")
                     return redirect(url_for("login"))
