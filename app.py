@@ -111,7 +111,7 @@ def login():
                 session["user_id"] = user_id
                 session["role"] = role
                 session["username"] = username 
-                
+
                 if role == "admin":
                     return redirect(url_for("admin_dashboard"))
                 else:
@@ -274,21 +274,24 @@ def download_page():
         flash("Unauthorized access!", "error")
         return redirect(url_for("login"))
 
-    filename = "wabume.exe"   # أو wabume.zip
-
     return render_template(
         "download.html",
-        username=session.get("username"),
-        file_name=filename
+        username=session.get("username"),  # ✅ يطلع الاسم الصح
+        file_name="wabume.exe"
     )
 
 # ----------------- Serve Download -----------------
 @app.route("/download_file/<filename>")
 def download_file(filename):
+    if "role" not in session or session["role"] != "user":
+        flash("Unauthorized access!", "error")
+        return redirect(url_for("login"))
+
     downloads_folder = os.path.join(app.root_path, "static", "files")
+
     return send_from_directory(
         directory=downloads_folder,
-        filename=filename,
+        path=filename,        # ✅ Flask 2.3+
         as_attachment=True
     )
 
