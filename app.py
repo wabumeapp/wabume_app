@@ -110,7 +110,8 @@ def login():
                 # login success
                 session["user_id"] = user_id
                 session["role"] = role
-
+                session["username"] = username 
+                
                 if role == "admin":
                     return redirect(url_for("admin_dashboard"))
                 else:
