@@ -106,6 +106,7 @@ def login():
                 if status != "accepted":
                     flash("Your account has not been approved yet.", "info")
                     return redirect(url_for("login"))
+                
                 # login success
                 session["user_id"] = user_id
                 session["role"] = role
@@ -263,8 +264,7 @@ def user_dashboard():
     else:
         # Any login after the first → run the program directly without showing any page
         conn.close()
-
-        return render_template("download_page", username=username)
+        return redirect(url_for("download_page"))
     
 # ----------------- Download Page -----------------
 @app.route("/download")
@@ -273,12 +273,11 @@ def download_page():
         flash("Unauthorized access!", "error")
         return redirect(url_for("login"))
 
-    username = session["username"]
     filename = "wabume.exe"   # أو wabume.zip
 
     return render_template(
         "download.html",
-        username=username,
+        username=session.get("username"),
         file_name=filename
     )
 
