@@ -265,34 +265,33 @@ def user_dashboard():
     else:
         # Any login after the first → run the program directly without showing any page
         conn.close()
-        return redirect(url_for("download_page"))
-    
-# ----------------- Download Page -----------------
-@app.route("/download")
-def download_page():
+        return redirect(url_for("appinfo"))
+ 
+ # ----------------- App Info Page -----------------
+@app.route("/appinfo")
+def appinfo():
     if "role" not in session or session["role"] != "user":
         flash("Unauthorized access!", "error")
         return redirect(url_for("login"))
+
+    user_id = session["user_id"]
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT username, status FROM users WHERE id=?", (user_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        flash("User not found!", "error")
+        return redirect(url_for("login"))
+
+    username, status = row
 
     return render_template(
-        "download.html",
-        username=session.get("username"),  # ✅ يطلع الاسم الصح
-        file_name="wabume.exe"
-    )
-
-# ----------------- Serve Download -----------------
-@app.route("/download_file/<filename>")
-def download_file(filename):
-    if "role" not in session or session["role"] != "user":
-        flash("Unauthorized access!", "error")
-        return redirect(url_for("login"))
-
-    downloads_folder = os.path.join(app.root_path, "static", "files")
-
-    return send_from_directory(
-        directory=downloads_folder,
-        path=filename,        # ✅ Flask 2.3+
-        as_attachment=True
+        "appinfo.html",
+        username=username,
+        status=status
     )
 
 # ----------------- Admin Accept / Reject -----------------

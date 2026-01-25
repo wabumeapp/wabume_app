@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wabume – App Info</title>
+</head>
+<body>
+
+    <h1>Wabume 🚀</h1>
+
+    <p>
+        Wabume is a web-based WhatsApp Bulk Messaging tool.
+        It allows approved users to manage and automate messaging easily.
+    </p>
+
+    <hr>
+
+    <h3>Welcome, {{ username }} 👋</h3>
+
+    <p>Status: {{ status }}</p>
+
+    <br>
+
+    <!-- زر لسا ما بيعمل شي -->
+    <button disabled>▶ Launch Wabume</button>
+
+    <br><br>
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+</body>
+</html>
