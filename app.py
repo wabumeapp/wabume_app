@@ -267,30 +267,8 @@ def user_dashboard():
         conn.close()
         return redirect(url_for("appinfo"))
  
-# ----------------- Download Page -----------------
-@app.route("/download")
-def download_page():
-    if "role" not in session or session["role"] != "user":
-        flash("Unauthorized access!", "error")
-        return redirect(url_for("login"))
 
-    filename = "wabume.exe"   # أو wabume.zip
 
-    return render_template(
-        "download.html",
-        username=session.get("username"),
-        file_name=filename
-    )
-
-# ----------------- Serve Download -----------------
-@app.route("/download_file/<filename>")
-def download_file(filename):
-    downloads_folder = os.path.join(app.root_path, "static", "files")
-    return send_from_directory(
-        directory=downloads_folder,
-        filename=filename,
-        as_attachment=True
-    )
 
 # ----------------- Admin Accept / Reject -----------------
 @app.route("/admin_action", methods=["POST"])
