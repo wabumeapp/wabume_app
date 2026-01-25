@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download Program</title>
+</head>
+<body>
+
+    <h1>Welcome, {{ username }} 👋</h1>
+
+    <p>Your program is ready to download.</p>
+    <p>If the download doesn’t start automatically, click the button below:</p>
+
+    <a href="{{ url_for('download_file', filename=file_name) }}">
+        <button>⬇ Download Program</button>
+    </a>
+
+</body>
+</html>

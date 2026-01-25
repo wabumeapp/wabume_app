@@ -265,33 +265,31 @@ def user_dashboard():
     else:
         # Any login after the first → run the program directly without showing any page
         conn.close()
-        return redirect(url_for("appinfo"))
+        return redirect(url_for("download_page"))
  
- # ----------------- App Info Page -----------------
-@app.route("/appinfo")
-def appinfo():
+# ----------------- Download Page -----------------
+@app.route("/download")
+def download_page():
     if "role" not in session or session["role"] != "user":
         flash("Unauthorized access!", "error")
         return redirect(url_for("login"))
 
-    user_id = session["user_id"]
-
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT username, status FROM users WHERE id=?", (user_id,))
-    row = cursor.fetchone()
-    conn.close()
-
-    if not row:
-        flash("User not found!", "error")
-        return redirect(url_for("login"))
-
-    username, status = row
+    filename = "wabume.exe"   # أو wabume.zip
 
     return render_template(
-        "appinfo.html",
-        username=username,
-        status=status
+        "download.html",
+        username=session.get("username"),
+        file_name=filename
+    )
+
+# ----------------- Serve Download -----------------
+@app.route("/download_file/<filename>")
+def download_file(filename):
+    downloads_folder = os.path.join(app.root_path, "static", "files")
+    return send_from_directory(
+        directory=downloads_folder,
+        filename=filename,
+        as_attachment=True
     )
 
 # ----------------- Admin Accept / Reject -----------------
@@ -359,3 +357,6 @@ def logout():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+
+
