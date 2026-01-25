@@ -66,15 +66,6 @@
             text-align: center;
         }
 
-        .status {
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .success {
-            color: #128C7E;
-        }
-
         .launch-btn {
             background: #128C7E;
             color: white;
@@ -115,43 +106,37 @@
     <!-- القسم الأساسي -->
     <div class="info">
         <h1>Welcome, {{ username }} 👋</h1>
-        <h3>Wabume 🚀</h3>
+        <h2>Wabume 🚀</h2>
 
         <p>
-            <strong>Wabume</strong> هو Web App ذكي لإدارة وإرسال الرسائل الجماعية عبر WhatsApp
-            بطريقة منظمة وآمنة، بدون الحاجة لتنزيل برامج أو إعدادات معقدة.
+            <strong>Wabume</strong>is a modern web-based WhatsApp Bulk Messaging application designed to help approved users manage and automate messaging in a simple and efficient way.
+
+            The platform allows you to send messages to multiple contacts while keeping everything organized, secure, and easy to control — all directly from your browser.        
         </p>
 
-        <p>
-            التطبيق مصمم ليساعدك على:
-        </p>
+        <h3>Key Features:</h3>
 
         <ul>
-            <li>إرسال رسائل جماعية بسهولة</li>
-            <li>إدارة جهات الاتصال بذكاء</li>
-            <li>توفير الوقت والمجهود</li>
-            <li>العمل مباشرة من المتصفح</li>
+            <li>Send bulk WhatsApp messages efficiently</li>
+            <li>Manage contacts and campaigns with ease</li>
+            <li>Save time and effort with automation tools</li>
+            <li>No software installation required</li>
+            <li>Works directly as a web application</li>
+            <li>Can be added to your desktop like a native app (PWA)</li>
         </ul>
 
         <p>
-            Wabume يعمل كنظام ويب حديث (Web App)،
-            ويمكن إضافته إلى سطح المكتب ليعمل مثل أي برنامج عادي.
+            Wabume is built as a secure web application, meaning you can access it anytime, from any device, without worrying about system compatibility or manual setup.
         </p>
     </div>
 
-    <!-- القسم الجانبي -->
     <div class="side">
-        <div class="status success">
-            ✅ Account Status: {{ status }}
+        <div class="note">
+            click the button to run <strong>Wabume</strong> application
         </div>
-
         <button class="launch-btn" disabled>
             ▶ Launch Wabume
         </button>
-
-        <div class="note">
-            سيتم تفعيل التطبيق في الخطوة القادمة
-        </div>
 
         <a class="logout" href="{{ url_for('logout') }}">Logout</a>
     </div>
