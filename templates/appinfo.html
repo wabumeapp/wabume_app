@@ -27,7 +27,6 @@
             text-align: left;
         }
 
-        /* القسم التعريفي */
         .info {
             flex: 2;
         }
@@ -57,7 +56,6 @@
             margin-bottom: 8px;
         }
 
-        /* القسم الجانبي */
         .side {
             flex: 1;
             background: #F8FAFB;
@@ -103,7 +101,6 @@
 
 <div class="container">
 
-    <!-- القسم الأساسي -->
     <div class="info">
         <h1>Welcome, {{ username }} 👋</h1>
         <h2>Wabume 🚀</h2>
@@ -134,10 +131,10 @@
         <div class="note">
             click the button to run <strong>Wabume</strong> application
         </div>
-        <button class="launch-btn" disabled>
-            ▶ Launch Wabume
-        </button>
 
+        <a href="/wabume">
+            <button>▶ Launch Wabume</button>
+        </a>
         <a class="logout" href="{{ url_for('logout') }}">Logout</a>
     </div>
 

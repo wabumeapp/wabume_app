@@ -279,14 +279,14 @@ def appinfo():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT username FROM users WHERE id=?", (user_id,))
-    un = cursor.fetchone()
+    row = cursor.fetchone()
     conn.close()
 
-    if not un:
+    if not row:
         flash("User not found!", "error")
         return redirect(url_for("login"))
 
-    username = un
+    username = row[0]
 
     return render_template(
         "appinfo.html",
