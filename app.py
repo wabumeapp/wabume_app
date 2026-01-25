@@ -267,30 +267,29 @@ def user_dashboard():
         conn.close()
         return redirect(url_for("appinfo"))
  
-# ----------------- App Info Page -----------------
-@app.route("/appinfo")
-def appinfo():
+# ----------------- Download Page -----------------
+@app.route("/download")
+def download_page():
     if "role" not in session or session["role"] != "user":
         flash("Unauthorized access!", "error")
         return redirect(url_for("login"))
 
-    user_id = session["user_id"]
-
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT username FROM users WHERE id=?", (user_id,))
-    un = cursor.fetchone()
-    conn.close()
-
-    if not un:
-        flash("User not found!", "error")
-        return redirect(url_for("login"))
-
-    username = un
+    filename = "wabume.exe"   # أو wabume.zip
 
     return render_template(
-        "appinfo.html",
-        username=username,
+        "download.html",
+        username=session.get("username"),
+        file_name=filename
+    )
+
+# ----------------- Serve Download -----------------
+@app.route("/download_file/<filename>")
+def download_file(filename):
+    downloads_folder = os.path.join(app.root_path, "static", "files")
+    return send_from_directory(
+        directory=downloads_folder,
+        filename=filename,
+        as_attachment=True
     )
 
 # ----------------- Admin Accept / Reject -----------------
