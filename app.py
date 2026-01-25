@@ -267,8 +267,31 @@ def user_dashboard():
         conn.close()
         return redirect(url_for("appinfo"))
  
+# ----------------- App Info Page -----------------
+@app.route("/appinfo")
+def appinfo():
+    if "role" not in session or session["role"] != "user":
+        flash("Unauthorized access!", "error")
+        return redirect(url_for("login"))
 
+    user_id = session["user_id"]
 
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT username FROM users WHERE id=?", (user_id,))
+    un = cursor.fetchone()
+    conn.close()
+
+    if not un:
+        flash("User not found!", "error")
+        return redirect(url_for("login"))
+
+    username = un
+
+    return render_template(
+        "appinfo.html",
+        username=username
+    )
 
 # ----------------- Admin Accept / Reject -----------------
 @app.route("/admin_action", methods=["POST"])
