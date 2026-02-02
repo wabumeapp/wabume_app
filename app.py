@@ -40,8 +40,8 @@ if not os.path.exists(DB_PATH):
     subprocess.run(["python", "database/setup_db.py"])
 
 # ----------------- Wabume Info -----------------
-@app.route("/wabumeinfo")
-def wabumeinfo():
+@app.route("/wabume_info")
+def wabume_info():
     return render_template("wabume_info.html")
 
 # ----------------- Signup -----------------
