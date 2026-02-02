@@ -20,7 +20,7 @@ app.secret_key = "secretkey123"  # to encrypt the session
 
 @app.route("/")
 def home():
-    return redirect(url_for("wabume_info.html"))
+    return redirect(url_for("wabumeinfo"))
 
 @app.route('/google13f31b5e24964739.html')
 def google_verify():
@@ -38,6 +38,11 @@ DB_PATH = "database/users.db"
 # إنشاء DB و admin تلقائيًا لو مش موجود
 if not os.path.exists(DB_PATH):
     subprocess.run(["python", "database/setup_db.py"])
+
+# ----------------- Wabume Info -----------------
+@app.route("/wabumeinfo")
+def wabumeinfo():
+    return render_template("wabume_info.html")
 
 # ----------------- Signup -----------------
 @app.route("/signup", methods=["GET", "POST"])
