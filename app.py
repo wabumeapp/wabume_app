@@ -20,7 +20,7 @@ app.secret_key = "secretkey123"  # to encrypt the session
 
 @app.route("/")
 def home():
-    return redirect(url_for("wabumeinfo"))
+    return redirect(url_for("wabume_info"))
 
 @app.route('/google13f31b5e24964739.html')
 def google_verify():
