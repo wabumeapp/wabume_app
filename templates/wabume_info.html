@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WABUME - WhatsApp Bulk Messenger</title>
+<style>
+  /* ========== COLORS ========== */
+  :root {
+    --dark-green: #075E54;
+    --light-green: #25D366;
+    --blue-accent: #1AB5D0;
+    --bg-color: #F0F2F5;
+    --card-color: #FFFFFF;
+    --text-color: #1e1f28;
+  }
+
+  /* ========== GLOBAL STYLES ========== */
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+  body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
+  a { color: var(--light-green); text-decoration: none; }
+  h1, h2, h3 { color: var(--dark-green); }
+  p { margin-bottom: 1rem; }
+
+  /* ========== HEADER ========== */
+  header {
+    background: linear-gradient(135deg, var(--dark-green), var(--light-green));
+    color: white;
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    animation: slideDown 1s ease-out;
+  }
+  header p {
+    font-size: 1.1rem;
+    animation: fadeIn 2s ease-in;
+  }
+  @keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ========== CONTAINER & CARDS ========== */
+  .container { max-width: 1100px; margin: auto; padding: 2rem 1rem; }
+  .side {
+    flex: 1;
+    background: #F8FAFB;
+    border-radius: 10px;
+    padding: 20px;
+    }
+  .card {
+    background: var(--card-color);
+    border-radius: 12px;
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+    .card:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12); 
+    }
+    .card h3 {
+      color: var(--blue-accent);
+      margin-bottom: 10px;
+    }
+    .card p {
+      font-size: 15px;
+    }
+
+  .cardd {
+    background: var(--card-color);
+    border-radius: 12px;
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+    .cardd:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12); 
+    }
+    .cardd h3 {
+      color: var(--light-green);
+      margin-bottom: 10px;
+    }
+    .cardd p {
+      font-size: 15px;
+    }
+
+  /* ========== SECTIONS ========== */
+  section { margin-bottom: 3rem; }
+  section h2 { margin-bottom: 1rem; }
+  section ul { list-style: disc inside; margin-left: 1rem; }
+
+  .section-title {
+    text-align: center;
+    font-size: 28px;
+    color: var(--dark);
+    margin-bottom: 40px;
+  } 
+
+  /* ---------- Cards ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  /* ---------- Modes ---------- */
+  .mode {
+    border-right: 5px solid var(--light-green);
+  }
+
+  /* ========== BUTTONS ========== */
+  .btn {
+    display: inline-block;
+    background: var(--light-green);
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--dark-green); }
+
+  /* ========== RESPONSIVE ========== */
+  @media(max-width:768px) {
+    header h1 { font-size: 1.8rem; }
+    section h2 { font-size: 1.2rem; }
+  }
+
+.cta-section {
+  background-color: #1e1f28; /* خلفية داكنة */
+  padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.cta-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2a2b37;
+  padding: 30px 40px;
+  border-radius: 16px;
+  max-width: 900px;
+  width: 100%;
+  gap: 30px;
+}
+
+.cta-text h2 {
+  color: #ffffff;
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.cta-text p {
+  color: #cfd1d9;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.cta-btn {
+  background-color: #25d366; /* أخضر بارز */
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.cta-btn:hover {
+  transform: scale(1.05);
+  background: var(--dark-green); 
+}
+
+.badge-circle {
+  width: 80px;
+  height: 80px;
+  background-color: #25d366; /* الأخضر */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 28px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.contact-section {
+  margin: 0;
+  padding: 20px 0;
+}
+
+.contact-section h2 {
+  margin-bottom: 10px;
+}
+
+.contact-email {
+  text-align: center;
+  margin: 0;
+}
+
+  /* ---------- Footer ---------- */
+  footer {
+    background: #075E54;
+    color: white;
+    text-align: center;
+    padding: 25px;
+    font-size: 14px;
+  }
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- ===== HERO / HEADER ===== -->
+<header>
+  <h1>WABUME</h1>
+  <p>Professional WhatsApp Bulk Messenger – Send messages efficiently at scale</p>
+</header>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="container">
+
+<!-- ===== What is WABUME ===== -->
+<section>
+  <div class="card">
+    <div>
+    <p>
+      <h2>📌 What is WABUME?</h2>
+    </p>
+    </div>
+
+    <div class="side">
+    <p>
+      WABUME is a desktop application that allows you to send WhatsApp messages
+      in bulk using your own WhatsApp account.  
+      It works through WhatsApp Web with no APIs, no servers, and no data storage.
+    </p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== How It Works ===== -->
+<section>
+  <h2 class="section-title">🧠 How WABUME Works</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>1️⃣ Add Phone Numbers</h3>
+      <p>Import numbers from Excel or add them manually. Numbers are cleaned automatically.</p>
+    </div>
+    <div class="card">
+      <h3>2️⃣ Write Your Message</h3>
+      <p>Send text messages, files, or both together. Empty messages are blocked.</p>
+    </div>
+    <div class="card">
+      <h3>3️⃣ Choose Sending Mode</h3>
+      <p>Select Manual, Batch, Auto, or Safe Mode depending on campaign size.</p>
+    </div>
+    <div class="card">
+      <h3>4️⃣ Scan WhatsApp QR</h3>
+      <p>Secure login using your WhatsApp Web QR code.</p>
+    </div>
+    <div class="card">
+      <h3>5️⃣ Start Sending</h3>
+      <p>Messages are sent gradually with smart delays. Pause or resume anytime.</p>
+    </div>
+    <div class="card">
+      <h3>6️⃣ Track Progress</h3>
+      <p>Live progress bar, counters, and final success/failure report.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Core Features ===== -->
+<section>
+  <div class="card">
+    <h2>✅ Core Features</h2>
+    <ul>
+      <li>Send bulk WhatsApp messages safely.</li>
+      <li>Supports text messages and file attachments.</li>
+      <li>Import phone numbers from Excel.</li>
+      <li>Custom delay between messages.</li>
+      <li>Pause & resume without restarting.</li>
+      <li>Detailed sending logs.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== Sending Modes ===== -->
+<section>
+  <h2 class="section-title">📤 Sending Modes</h2>
+  <div class="grid">
+    <div class="cardd mode">
+      <h3>Manual Mode</h3>
+      <p>Send messages with a fixed custom delay.</p>
+    </div>
+    <div class="cardd mode">
+      <h3>Batch Mode</h3>
+      <p>Send messages in batches with rest intervals.</p>
+    </div>
+    <div class="cardd mode">
+      <h3>Auto Mode</h3>
+      <p>Automatically distribute messages over 24 hours.</p>
+    </div>
+    <div class="cardd mode">
+      <h3>Safe Mode</h3>
+      <p>Automatically activates for large lists (+200 numbers).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Advanced Capabilities ===== -->
+<section>
+  <div class="card">
+    <h2>⚙️ Advanced Capabilities</h2>
+    <ul>
+      <li>No WhatsApp APIs required.</li>
+      <li>Smart delay system simulating human behavior.</li>
+      <li>Failed numbers handled separately.</li>
+      <li>Works with personal WhatsApp accounts.</li>
+      <li>Runs fully on your local machine.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== Security & Safety ===== -->
+<section>
+  <div class="card">
+    <h2>🔒 Security & Account Safety</h2>
+    <ul>
+      <li>Login only via WhatsApp QR code.</li>
+      <li>No passwords or data stored.</li>
+      <li>No external servers.</li>
+      <li>Automatic Safe Mode protection.</li>
+      <li>Human-like behavior to reduce ban risk.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== Logs & Control ===== -->
+<section>
+  <div class="card">
+    <h2>📊 Logs & Full Control</h2>
+    <ul>
+      <li>Real-time progress tracking.</li>
+      <li>Success & failure counters.</li>
+      <li>Final report with timestamps.</li>
+      <li>Full campaign visibility.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== Use Case ===== -->
+<section>
+  <h2 class="section-title">📌 Typical Use Case</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Step 1</h3>
+      <p>Import 300 customer numbers from Excel.</p>
+    </div>
+    <div class="card">
+      <h3>Step 2</h3>
+      <p>Safe Mode activates automatically.</p>
+    </div>
+    <div class="card">
+      <h3>Step 3</h3>
+      <p>Messages are sent gradually over hours.</p>
+    </div>
+    <div class="card">
+      <h3>Step 4</h3>
+      <p>Receive a detailed final report.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Who Is It For ===== -->
+<section>
+  <h2 class="section-title">👥 Who Can Benefit?</h2>
+  <div class="grid">
+    <div class="card mode"><p>📢 Businesses</p></div>
+    <div class="card mode"><p>🏢 Marketing Teams</p></div>
+    <div class="card mode"><p>🎓 Customer Support</p></div>
+    <div class="card mode"><p>🤝 Event Organizers</p></div>
+  </div>
+</section>
+
+<!-- ===== Why Choose ===== -->
+<section>
+  <div class="card">
+    <h2>💡 Why Choose WABUME?</h2>
+    <ul>
+      <li>No subscriptions or monthly fees.</li>
+      <li>No API approvals or limits.</li>
+      <li>Full control over campaigns.</li>
+      <li>Designed for real WhatsApp usage.</li>
+      <li>Simple UI with powerful automation.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <div class="cta-card">
+    <div class="cta-text">
+      <h2>Get Started with WABUME Today!</h2>
+      <p>Send messages professionally, safely, and efficiently.</p>
+<button class="cta-btn" onclick="window.location.href='{{ url_for('signup') }}'">
+  Download Now
+</button>
+    </div>
+    <div class="badge-circle">
+      <i class="fa-solid fa-download"></i>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ===== Contact ===== -->
+<section class="contact-section">
+  <h2 class="section-title">✉️ Contact Us</h2>
+  <p class="contact-email">wabume.app@gmail.com
+    <br><br>
+  </p>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+  © 2026 WABUME – All Rights Reserved
+</footer>
+
+</body>
+</html>
