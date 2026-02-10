@@ -294,7 +294,7 @@ def appinfo():
     username = row[0]
 
     return render_template(
-        "appinfo.html",
+        "wabume_app.html",
         username=username
     )
 
