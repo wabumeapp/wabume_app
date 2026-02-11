@@ -14,7 +14,7 @@ import os
 import subprocess
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
-import database.setup_db as setup_db
+
 
 app = Flask(__name__)
 app.secret_key = "secretkey123"  # to encrypt the session 
@@ -31,16 +31,15 @@ def google_verify():
 def sitemap():
     return send_from_directory('.', 'sitemap.xml')
 
-# ----- Database path -----
-DB_FOLDER = "database"
-DB_PATH = os.path.join(DB_FOLDER, "users.db")
+# إنشاء مجلد database لو مش موجود
+os.makedirs("database", exist_ok=True)
 
-# Ensure folder exists
-os.makedirs(DB_FOLDER, exist_ok=True)
+DB_PATH = "database/users.db"
 
-# Create DB only if not exists
+# إنشاء DB و admin تلقائيًا لو مش موجود
 if not os.path.exists(DB_PATH):
-    setup_db.create_db(DB_PATH)
+    subprocess.run(["python", "database/setup_db.py"])
+
 # ----------------- Wabume Info -----------------
 @app.route("/wabume_info")
 def wabume_info():
@@ -365,6 +364,7 @@ def logout():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
