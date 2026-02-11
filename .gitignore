@@ -34,3 +34,6 @@ Templates/
 
 # ملفات Selenium/ChromeDriver لو موجودة
 chromedriver.exe
+
+database/users.db
+.env
