@@ -11,10 +11,9 @@ from flask import (
 import sqlite3
 from datetime import datetime
 import os
-import subprocess
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
-
+import database.setup_db as setup_db
 
 app = Flask(__name__)
 app.secret_key = "secretkey123"  # to encrypt the session 
@@ -36,9 +35,9 @@ os.makedirs("database", exist_ok=True)
 
 DB_PATH = "database/users.db"
 
-# إنشاء DB و admin تلقائيًا لو مش موجود
+# إنشاء DB مرة واحدة فقط لو مش موجود
 if not os.path.exists(DB_PATH):
-    subprocess.run(["python", "database/setup_db.py"])
+    setup_db.create_db(DB_PATH)
 
 # ----------------- Wabume Info -----------------
 @app.route("/wabume_info")
@@ -56,7 +55,7 @@ def signup():
             flash("Please fill in all fields.", "error")
             return redirect(url_for("signup"))
 
-        conn = sqlite3.connect("database/users.db")
+        conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
         cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
@@ -92,8 +91,6 @@ def signup():
     return render_template("signup.html")
 
 # ----------------- Login -----------------
-DB_PATH = "database/users.db"
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
