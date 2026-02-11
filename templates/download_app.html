@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WABUME – Download App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+/* ===== Base ===== */
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #f2f4f7;
+  color: #2c3e50;
+  margin: 0;
+  padding: 40px 20px;
+}
+
+/* ===== Main Layout ===== */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+  display: flex;
+  gap: 30px;
+  padding: 30px;
+}
+
+.info {
+  flex: 3;
+}
+
+.side {
+  flex: 1;
+  background: #f8fafb;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+}
+
+/* ===== Content Wrapper ===== */
+.wrapper {
+  padding: 10px 10px 20px;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSide {
+  from { opacity: 0; transform: translateX(-25px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.wrapper section {
+  animation: fadeUp 0.8s ease both;
+  margin-bottom: 60px;
+}
+
+/* ===== Titles ===== */
+h1 {
+  font-size: 30px;
+  color: #075E54;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 24px;
+  color: #128C7E;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 19px;
+  margin-top: 30px;
+  color: #0b6659;
+  animation: fadeSide 0.6s ease both;
+}
+
+/* ===== Text ===== */
+p {
+  font-size: 15.5px;
+  line-height: 1.8;
+  margin: 10px 0;
+}
+
+.lead {
+  font-size: 16.5px;
+  color: #3b4a54;
+}
+
+/* ===== Lists ===== */
+ul {
+  margin-left: 18px;
+}
+
+ul li {
+  margin-bottom: 7px;
+}
+
+/* ===== Steps ===== */
+.step {
+  padding-left: 18px;
+  border-left: 4px solid #128C7E;
+  margin-top: 30px;
+}
+
+/* ===== Divider ===== */
+.divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #ccc, transparent);
+  margin: 60px 0;
+}
+
+/* ===== Modes ===== */
+.mode {
+  background: #f8fafb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  border-left: 5px solid #128C7E;
+  transition: all 0.3s ease;
+}
+
+.mode:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.14);
+}
+
+/* ===== Buttons ===== */
+.launch-btn {
+  background: #128C7E;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.launch-btn:hover {
+  background: #0f6f63;
+}
+
+.logout {
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+  font-weight: 600;
+  color: #128C7E;
+}
+
+.logout:hover {
+  color: #075E54;
+}
+
+.note {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LEFT -->
+  <div class="info">
+    <h1>Welcome, {{ username }} 👋</h1>
+
+    <div class="wrapper">
+
+      <section>
+        <h2>How WABUME Works</h2>
+        <p class="lead">
+        WABUME is designed to make WhatsApp bulk messaging simple, controlled, and safe. 
+        <br>
+        Instead of overwhelming you with settings, the system guides you through a clear, logical flow.
+        </p>
+      </section>
+
+  <!-- FLOW -->
+  <section>
+
+    <h2>The Workflow</h2>
+
+    <div class="step">
+      <h3>Step 1 – Prepare Your Contacts</h3>
+      <p>
+        Every campaign starts with phone numbers.
+        You can import them from Excel or add them manually.
+      </p>
+      <ul>
+        <li>Duplicates are removed automatically</li>
+        <li>Country codes are validated and fixed</li>
+        <li>Invalid entries are ignored</li>
+      </ul>
+      <p>
+        You don’t need to clean the list yourself —
+        WABUME does it before sending.
+      </p>
+    </div>
+
+    <div class="step">
+      <h3>Step 2 – Create Your Message</h3>
+      <p>
+        Next, you define what will be sent.
+        A text message, a file, or both together.
+      </p>
+      <p>
+        Empty messages are blocked by design.
+        Every send action must contain valid content.
+      </p>
+    </div>
+
+    <div class="step">
+      <h3>Step 3 – Connect WhatsApp</h3>
+      <p>
+        WABUME works through WhatsApp Web.
+        You scan a QR code using your phone and you're connected.
+      </p>
+      <ul>
+        <li>No installations</li>
+        <li>No saved passwords</li>
+        <li>No access to private data</li>
+      </ul>
+      <p>
+        Authentication and security are handled entirely by WhatsApp.
+      </p>
+    </div>
+
+    <div class="step">
+      <h3>Step 4 – Start Sending</h3>
+      <p>
+        Once connected, messages are sent one by one,
+        following controlled delays.
+      </p>
+      <p>
+        You can pause, resume, or stop the process at any moment.
+        Errors are logged without interrupting the campaign.
+      </p>
+    </div>
+
+    <div class="step">
+      <h3>Step 5 – Monitor and Review</h3>
+      <p>
+        While sending, you see live progress and counters.
+        When finished, a clear report shows what succeeded and what failed.
+      </p>
+    </div>
+
+  </section>
+
+  
+  <div class="divider"></div>
+
+  <!-- MODES -->
+  <section>
+
+    <h2>Sending Modes</h2>
+    <p class="lead">
+      Sending modes are advanced options.
+      Choose them based on campaign size and safety level —
+      not speed alone.
+    </p>
+
+    <div class="mode">
+      <h3>Manual Mode</h3>
+      <p>
+        You control the delay between each message.
+        Best for small lists, testing, or full manual control.
+      </p>
+    </div>
+
+    <div class="mode">
+      <h3>Batch Mode</h3>
+      <p>
+        Messages are sent in groups with rest intervals.
+        Faster than manual sending, while still controlled.
+      </p>
+    </div>
+
+    <div class="mode">
+      <h3>Auto Mode</h3>
+      <p>
+        Messages are automatically distributed over 24 hours.
+        WABUME calculates delays dynamically without manual setup.
+      </p>
+    </div>
+
+    <div class="mode">
+      <h3>Safe Mode</h3>
+      <p>
+        Automatically activates for large campaigns.
+        Slower sending, longer pauses, and maximum account protection.
+      </p>
+    </div>
+
+  </section>
+
+</div>
+
+
+    </div>
+
+
+  <!-- RIGHT -->
+  <div class="side">
+    <div class="note">Download the <strong>WABUME</strong> application</div>
+    <a href="/wabume">
+      <button class="launch-btn">⬇ Download Now</button>
+    </a>
+    <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+  </div>
+
+</div>
+
+</body>
+</html>

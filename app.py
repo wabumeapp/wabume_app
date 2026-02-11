@@ -270,11 +270,11 @@ def user_dashboard():
     else:
         # Any login after the first → run the program directly without showing any page
         conn.close()
-        return redirect(url_for("wabume_app"))
+        return redirect(url_for("download_app"))
  
-# ----------------- App Info Page -----------------
-@app.route("/wabume_app")
-def wabume_app():
+# ----------------- Download App Page -----------------
+@app.route("/download_app")
+def download_app():
     if "role" not in session or session["role"] != "user":
         flash("Unauthorized access!", "error")
         return redirect(url_for("login"))
@@ -294,7 +294,7 @@ def wabume_app():
     username = row[0]
 
     return render_template(
-        "wabume_app.html",
+        "download_app.html",
         username=username
     )
 
