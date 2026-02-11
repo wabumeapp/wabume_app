@@ -3,69 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <title>WaBuMe - User Dashboard</title>
-    <meta name="description" content="WaBuMe: إرسال رسائل واتساب بالجملة بسهولة وسرعة | Send WhatsApp messages in bulk easily and fast.">
-    <meta name="keywords" content="WaBuMe, رسائل واتساب, واتساب بالجملة, إرسال رسائل, WhatsApp bulk, WhatsApp messages">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta name="description" content="WaBuMe: إرسال رسائل واتساب بالجملة بسهولة وسرعة | Send WhatsApp messages in bulk easily and fast.">
+<meta name="keywords" content="WaBuMe, رسائل واتساب, واتساب بالجملة, إرسال رسائل, WhatsApp bulk, WhatsApp messages">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
+/* ===== Base ===== */
 body { 
-    font-family:"Trebuchet MS", sans-serif; 
+    font-family: "Trebuchet MS", sans-serif; 
     direction: rtl; 
-    background:#F0F2F5; 
-    text-align:center; 
-    padding:30px; 
+    background: #F0F2F5; 
+    text-align: center; 
+    padding: 40px 20px; 
+    margin: 0;
 }
 
+/* ===== Container ===== */
 .container { 
-    background:#FFFFFF; 
-    width:500px; 
-    margin:auto; 
-    padding:25px; 
-    border-radius:10px; 
-    box-shadow:0 0 12px rgba(0,0,0,0.15); 
+    background: #FFFFFF; 
+    max-width: 500px; 
+    margin: 40px auto; 
+    padding: 35px 30px; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.container:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 35px rgba(0,0,0,0.15);
+}
+
+/* ===== Titles ===== */
 h2 { 
-    color:#3B4A54; 
-    margin-bottom:20px; 
+    color: #3B4A54; 
+    margin-bottom: 25px; 
+    font-size: 26px;
 }
 
+/* ===== Status Text ===== */
 .status { 
-    font-weight:bold; 
-    margin-top:10px; 
+    font-weight: bold; 
+    margin-top: 10px; 
+    font-size: 16px;
 }
 
 .success { 
-    color:#128C7E; 
+    color: #128C7E; 
 }
 
 .error { 
-    color:#D21B2A; 
+    color: #D21B2A; 
 }
 
 .info { 
-    color:#1AB5D0; 
+    color: #1AB5D0; 
 }
 
+/* ===== Paragraphs ===== */
+p {
+    font-size: 15.5px;
+    line-height: 1.8;
+    margin: 15px 0;
+}
+
+/* ===== CTA Button ===== */
+a.download-btn {
+    display: inline-block;
+    background: #128C7E;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 8px;
+    margin: 20px 0;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+a.download-btn:hover {
+    background: #0f6f63;
+    transform: translateY(-2px);
+}
+
+/* ===== Logout Link ===== */
 a.logout { 
-    display:inline-block; 
-    margin-top:20px; 
-    text-decoration:none; 
-    color:#128C7E; 
+    display: inline-block; 
+    margin-top: 15px; 
+    text-decoration: none; 
+    color: #128C7E; 
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 a.logout:hover {
-    color:#075E54;
+    color: #075E54;
 }
 </style>
-
 </head>
+
 <body>
 <div class="container">
     <h2>Welcome, {{ username }}!</h2>
 
     <p>Account status : 
-        <span class="{{ 'success' if status=='accepted' else ('error' if status=='rejected' else 'info') }}">{{ status }}</span>
+        <span class="status {{ 'success' if status=='accepted' else ('error' if status=='rejected' else 'info') }}">{{ status }}</span>
     </p>
 
     {% if status != 'accepted' %}
@@ -76,12 +117,12 @@ a.logout:hover {
         <p>⚠️ <strong>Important:</strong><br> 
             Please take a screenshot of the recovery code below.<br>
             You will need it if you forget your password.
-            the recovery code: {{ recovery_code }}
+            <br><strong>Recovery code:</strong> {{ recovery_code }}
         </p>
 
-        <a href="{{ url_for('download_app') }}">⬇ instull Program</a>
+        <a href="{{ url_for('download_app') }}" class="download-btn">⬇ download Program</a>
     {% endif %}
-
+        <br>
     <a class="logout" href="{{ url_for('logout') }}">Logout</a>
 </div>
 </body>
