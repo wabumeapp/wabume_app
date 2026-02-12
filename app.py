@@ -8,12 +8,14 @@ from flask import (
     flash,
     send_from_directory
 )
+import os
 import sqlite3
 from datetime import datetime
-import os
+
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 import database.setup_db as setup_db
+import psycopg2
 
 app = Flask(__name__)
 app.secret_key = "secretkey123"  # to encrypt the session 
@@ -30,15 +32,28 @@ def google_verify():
 def sitemap():
     return send_from_directory('.', 'sitemap.xml')
 
-# إنشاء مجلد database لو مش موجود
+# --- Setup local database ---
+DB_PATH = "database/users.db"
 os.makedirs("database", exist_ok=True)
 
-DB_PATH = "database/users.db"
-
-# إنشاء DB مرة واحدة فقط لو مش موجود
+# Create DB only once if it doesn't exist
 if not os.path.exists(DB_PATH):
     setup_db.create_db(DB_PATH)
 
+# --- Flexible DB connection (PostgreSQL or SQLite) ---
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+def get_db_connection():
+    if DATABASE_URL:
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.autocommit = False  # Must manually commit for PostgreSQL
+        placeholder = "%s"
+        return conn, placeholder
+    else:
+        conn = sqlite3.connect(DB_PATH)
+        placeholder = "?"
+        return conn, placeholder
+    
 # ----------------- Wabume Info -----------------
 @app.route("/wabume_info")
 def wabume_info():
@@ -55,37 +70,32 @@ def signup():
             flash("Please fill in all fields.", "error")
             return redirect(url_for("signup"))
 
-        conn = sqlite3.connect(DB_PATH)
+        # --- Get DB connection + placeholder ---
+        conn, placeholder = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
+        # Check if username exists
+        cursor.execute(f"SELECT id FROM users WHERE username ={placeholder}", (username,))
         exists = cursor.fetchone()
 
         if exists:
             conn.close()
-            flash("Username already exists!", "success")   
+            flash("Username already exists!", "info")   
             return render_template("signup.html", username_exists=True)
-        
-        
-        # Check if the username exists only
-        cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
-        exists_name = cursor.fetchone()
 
-        if exists_name:
-            conn.close()
-            flash("Username already taken, please choose another.", "error")
-            return render_template("signup.html")
-
+        # Hash the password
         hashed_password = generate_password_hash(password)
 
-        cursor.execute("""
+        # Insert new user
+        cursor.execute(f"""
             INSERT INTO users (username, password, role, status, created_at)
-            VALUES (?, ?, ?, ?, ?)
-        """, (username, hashed_password, "user", "pending", datetime.now()))
+            VALUES ({placeholder}, {placeholder}, 'user', 'pending', {placeholder})
+        """, (username, hashed_password, datetime.now()))
 
         conn.commit()
         conn.close()
-        flash("You have successfully registered! Waiting for admin approval.", "success")   #تم تسجيلك بنجاح! في انتظار موافقة الادمن
+
+        flash("You have successfully registered! Waiting for admin approval.", "success")  
         return redirect(url_for("signup"))  # ⚡ Stay on the same page
 
     return render_template("signup.html")
@@ -97,14 +107,17 @@ def login():
         username = request.form["username"].strip()
         password = request.form["password"].strip()
 
-        conn = sqlite3.connect(DB_PATH)
+        # --- Get DB connection + placeholder ---
+        conn, placeholder = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT id, password, role, status FROM users WHERE username = ?", (username,))
+
+        cursor.execute(f"SELECT id, password, role, status FROM users WHERE username ={placeholder}", (username,))
         row = cursor.fetchone()
         conn.close()
 
         if row:
             user_id, real_password, role, status = row
+
             if check_password_hash(real_password, password):
                 if status != "accepted":
                     flash("Your account has not been approved yet.", "info")
@@ -140,13 +153,16 @@ def recover():
 
     CORRECT_ADMIN_CODE = "ADMIN123"
 
+    # --- Get DB connection + placeholder ---
+    conn, placeholder = get_db_connection()
+    cursor = conn.cursor()
+
     if admin_code == CORRECT_ADMIN_CODE:
         # Retrieve the actual stored password (stored as plain text — not secure but acceptable for now)
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
-        cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
+        cursor.execute(f"SELECT password FROM users WHERE username ={placeholder}", (username,))
         r = cursor.fetchone()
         conn.close()
+
         if r:
             real_password = r[0]
             flash(f"Verified. Your password is: {real_password}", "success")
@@ -157,6 +173,7 @@ def recover():
             return redirect(url_for("signup"))
     else:
         # Wrong recovery code → treat as a new user and redirect to signup with countdown
+        conn.close()
         return render_template("login.html", go_to_signup=True)
 
 # ----------------- Admin Dashboard -----------------
@@ -166,15 +183,16 @@ def admin_dashboard():
         flash("Access denied!", "error")
         return redirect(url_for("login"))
 
-    conn = sqlite3.connect(DB_PATH)
+    # --- Get DB connection + placeholder ---
+    conn, placeholder = get_db_connection()
     cursor = conn.cursor()
 
     # Accepted users only
-    cursor.execute("SELECT id, username, role, status, created_at FROM users WHERE status='accepted'")
+    cursor.execute(f"SELECT id, username, role, status, created_at FROM users WHERE status='accepted'")
     accepted_users = cursor.fetchall()
 
     # New users only (pending)
-    cursor.execute("SELECT id, username, created_at FROM users WHERE status='pending'")
+    cursor.execute(f"SELECT id, username, created_at FROM users WHERE status='pending'")
     pending_users = cursor.fetchall()
 
     conn.close()
@@ -187,23 +205,25 @@ def user_details(user_id):
         flash("Unauthorized access!", "error")
         return redirect(url_for("login"))
 
-    # Fetch user data from DB
-    conn = sqlite3.connect(DB_PATH)
+    # --- Get DB connection + placeholder ---
+    conn, placeholder = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT username, status, created_at, recovery_code FROM users WHERE id=?", (user_id,))
+
+    # Fetch user data
+    cursor.execute(f"SELECT username, status, created_at, recovery_code FROM users WHERE id={placeholder}", (user_id,))
     user = cursor.fetchone()
-    conn.close()
 
     if not user:
+        conn.close()
         flash("User not found!", "error")
         return redirect(url_for("admin_dashboard"))
 
     username, status, created_at, recovery_code = user
-     
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT date, time, phone, message FROM user_messages WHERE user_id=?", (user_id,))
+
+    # Fetch user messages
+    cursor.execute(f"SELECT date, time, phone, message FROM user_messages WHERE user_id={placeholder}", (user_id,))
     messages = cursor.fetchall()
+
     conn.close()
 
 
@@ -227,9 +247,11 @@ def user_dashboard():
 
     user_id = session["user_id"]
 
-    conn = sqlite3.connect(DB_PATH)
+    # --- Get DB connection + placeholder ---
+    conn, placeholder = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT username, status, recovery_code, sent_msg FROM users WHERE id=?", (user_id,))
+
+    cursor.execute(f"SELECT username, status, recovery_code, sent_msg FROM users WHERE id={placeholder}", (user_id,))
     row = cursor.fetchone()
 
     if not row:
@@ -246,7 +268,7 @@ def user_dashboard():
 
     # 🔹 Rejected
     if status == "rejected":
-        cursor.execute("DELETE FROM users WHERE id=?", (user_id,))
+        cursor.execute(f"DELETE FROM users WHERE id={placeholder}", (user_id,))
         conn.commit()
         conn.close()
         flash("Your account has been rejected by the admin.", "error")
@@ -255,7 +277,7 @@ def user_dashboard():
     # 🔹 Accepted
     if sent_msg == 0:
         # First login after acceptance → send recovery code message
-        cursor.execute("UPDATE users SET sent_msg=1 WHERE id=?", (user_id,))
+        cursor.execute(f"UPDATE users SET sent_msg=1 WHERE id={placeholder}", (user_id,))
         conn.commit()
         conn.close()
 
@@ -279,9 +301,11 @@ def download_app():
 
     user_id = session["user_id"]
 
-    conn = sqlite3.connect(DB_PATH)
+    # --- Get DB connection + placeholder ---
+    conn, placeholder = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT username FROM users WHERE id=?", (user_id,))
+
+    cursor.execute(f"SELECT username FROM users WHERE id={placeholder}", (user_id,))
     row = cursor.fetchone()
     conn.close()
 
@@ -306,11 +330,12 @@ def admin_action():
     user_id = request.form.get("user_id")
     action = request.form.get("action")
 
-    conn = sqlite3.connect(DB_PATH)
+    # --- Get DB connection + placeholder ---
+    conn, placeholder = get_db_connection()
     cursor = conn.cursor()
 
     if action == "accept":
-        cursor.execute("SELECT created_at, username FROM users WHERE id = ?", (user_id,))
+        cursor.execute(f"SELECT created_at, username FROM users WHERE id ={placeholder}", (user_id,))
         row = cursor.fetchone()
 
         if row:
@@ -321,10 +346,10 @@ def admin_action():
             code = "".join([c for c in raw if c.isdigit()])  # 20251202051724349017
 
             # Update status + save code + set sent_msg=0
-            cursor.execute("""
+            cursor.execute(f"""
                 UPDATE users 
-                SET status='accepted', recovery_code=?, sent_msg=0
-                WHERE id=?
+                SET status='accepted', recovery_code={placeholder}, sent_msg=0
+                WHERE id={placeholder}
             """, (code, user_id))
             conn.commit()
             conn.close()
@@ -333,16 +358,16 @@ def admin_action():
         return redirect(url_for("admin_dashboard"))
 
     elif action == "reject":
-        cursor.execute("SELECT username FROM users WHERE id=?", (user_id,))
+        cursor.execute(f"SELECT username FROM users WHERE id={placeholder}", (user_id,))
         row = cursor.fetchone()
         username = row[0] if row else ""
 
         # Reject the user
-        cursor.execute("UPDATE users SET status='rejected', sent_msg=0 WHERE id=?", (user_id,))
+        cursor.execute(f"UPDATE users SET status='rejected', sent_msg=0 WHERE id={placeholder}", (user_id,))
         conn.commit()
         conn.close()
 
-        flash(f"{username} has been rejected.", "info")
+        flash(f"{username} has been rejected.", "error")
         return redirect(url_for("admin_dashboard"))
 
     conn.close()
