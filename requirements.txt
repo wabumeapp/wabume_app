@@ -7,3 +7,4 @@ blinker>=1.9.0
 markupsafe>=3.0.2
 colorama>=0.4.6
 gunicorn
+psycopg2-binary
