@@ -36,4 +36,5 @@ Templates/
 chromedriver.exe
 
 database/users.db
+database/*.db
 .env
