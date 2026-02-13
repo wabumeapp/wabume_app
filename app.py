@@ -378,8 +378,9 @@ def admin_action():
 @app.route("/logout")
 def logout():
     session.clear()
-    flash("Logged out successfully.", "info")
-    return redirect(url_for("login"))
+    flash("TEST MESSAGE", "info")
+    return render_template("login.html")
+
 
 
 # ----------------- Run App -----------------
