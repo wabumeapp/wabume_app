@@ -54,6 +54,25 @@ def get_db_connection():
         placeholder = "?"
         return conn, placeholder
     
+def init_postgres():
+    if DATABASE_URL:
+        conn = psycopg2.connect(DATABASE_URL)
+        cur = conn.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(150) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        conn.commit()
+        cur.close()
+        conn.close()
+        print("PostgreSQL table ready ✅")
+
+init_postgres()
+    
 # ----------------- Wabume Info -----------------
 @app.route("/wabume_info")
 def wabume_info():
