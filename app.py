@@ -73,8 +73,29 @@ def init_postgres():
         conn.close()
         print("PostgreSQL table ready ✅")
 
+def create_admin_if_not_exists():
+    if DATABASE_URL:
+        conn = psycopg2.connect(DATABASE_URL)
+        cur = conn.cursor()
+
+        cur.execute("SELECT id FROM users WHERE username=%s", ("admin",))
+        admin = cur.fetchone()
+
+        if not admin:
+            hashed_password = generate_password_hash("admin123")
+            cur.execute("""
+                INSERT INTO users (username, password, role, status)
+                VALUES (%s, %s, %s, %s)
+            """, ("admin", hashed_password, "admin", "active"))
+            conn.commit()
+            print("Admin account created ✅")
+
+        cur.close()
+        conn.close()
+
 init_postgres()
-    
+create_admin_if_not_exists()
+
 # ----------------- Wabume Info -----------------
 @app.route("/wabume_info")
 def wabume_info():
