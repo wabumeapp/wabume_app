@@ -63,6 +63,8 @@ def init_postgres():
                 id SERIAL PRIMARY KEY,
                 username VARCHAR(150) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
+                role VARCHAR(50) DEFAULT 'user',
+                status VARCHAR(50) DEFAULT 'active',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         """)
