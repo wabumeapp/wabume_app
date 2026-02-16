@@ -64,7 +64,7 @@ def init_postgres():
                 username VARCHAR(150) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
                 role VARCHAR(50) DEFAULT 'user',
-                status VARCHAR(50) DEFAULT 'active',
+                status VARCHAR(50) DEFAULT 'accepted',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         """)
@@ -86,7 +86,7 @@ def create_admin_if_not_exists():
             cur.execute("""
                 INSERT INTO users (username, password, role, status)
                 VALUES (%s, %s, %s, %s)
-            """, ("admin", hashed_password, "admin", "active"))
+            """, ("admin", hashed_password, "admin", "accepted"))
             conn.commit()
             print("Admin account created ✅")
 
@@ -95,6 +95,18 @@ def create_admin_if_not_exists():
 
 init_postgres()
 create_admin_if_not_exists()
+
+def show_sqlite_columns():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(users);")
+    columns = cursor.fetchall()
+    print("SQLite columns:")
+    for col in columns:
+        print(col)
+    conn.close()
+
+show_sqlite_columns()
 
 # ----------------- Wabume Info -----------------
 @app.route("/wabume_info")
@@ -161,7 +173,7 @@ def login():
             user_id, real_password, role, status = row
 
             if check_password_hash(real_password, password):
-                if status != "active":
+                if status != "accepted":
                     flash("Your account has not been approved yet.", "info")
                     return redirect(url_for("login"))
                 
