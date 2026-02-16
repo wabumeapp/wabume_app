@@ -60,12 +60,14 @@ def init_postgres():
         cur = conn.cursor()
         cur.execute("""
             CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
-                username VARCHAR(150) UNIQUE NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                role VARCHAR(50) DEFAULT 'user',
-                status VARCHAR(50) DEFAULT 'accepted',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                role TEXT NOT NULL DEFAULT 'user',
+                status TEXT NOT NULL DEFAULT 'pending',
+                recovery_code TEXT,
+                sent_msg INTEGER DEFAULT 0,
+                created_at TIMESTAMP NOT NULL
             );
         """)
         conn.commit()
