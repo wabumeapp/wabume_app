@@ -161,7 +161,7 @@ def login():
             user_id, real_password, role, status = row
 
             if check_password_hash(real_password, password):
-                if status != "accepted":
+                if status != "active":
                     flash("Your account has not been approved yet.", "info")
                     return redirect(url_for("login"))
                 
