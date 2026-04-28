@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>WaBuMe - User Details</title>
+    <meta name="description" content="WaBuMe: إرسال رسائل واتساب بالجملة بسهولة وسرعة | Send WhatsApp messages in bulk easily and fast.">
+    <meta name="keywords" content="WaBuMe, رسائل واتساب, واتساب بالجملة, إرسال رسائل, WhatsApp bulk, WhatsApp messages">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body {
+    font-family:"Trebuchet MS", sans-serif;
+    direction: rtl;
+    background:#F0F2F5;
+    text-align:center;
+    padding:30px;
+}
+.container {
+    background:#FFFFFF;
+    width:600px;
+    margin:auto;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 12px rgba(0,0,0,0.15);
+}
+h2, h3 {
+    color:#3B4A54;
+    margin-bottom:20px;
+}
+p, li {
+    color:#3B4A54;
+    font-size:14px;
+    line-height:1.5;
+}
+.status {
+    font-weight:bold;
+}
+.status.accepted { color:#25D366; }
+.status.rejected { color:#D21B2A; }
+.status.info { color:#1AB5D0; }
+ul {
+    text-align:right;
+    padding-right:20px;
+}
+a {
+    display:inline-block;
+    margin-top:20px;
+    text-decoration:none;
+    color:#128C7E;
+    font-weight:bold;
+}
+a:hover {
+    color:#075E54;
+}
+strong.user {
+    color:#128C7E;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>User Details: <strong class="user"> {{ username }} </strong> </h2>
+
+    <p>Registration Date: {{ created_at }}</p>
+    <p>Account Status: {{ status }}</p>
+
+    {% if status == 'accepted' %}
+    <p>Password Recovery Code: <strong>{{ recovery_code }}</strong></p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Sent Messages:</h3>
+    {% if messages %}
+        <ul>
+            {% for msg in messages %}
+            <li style="margin-bottom:10px; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                📅 <b>Date:</b> {{ msg[0] }} <br>
+                ⏰ <b>Time:</b> {{ msg[1] }} <br>
+                📞 <b>Phone:</b> {{ msg[2] }} <br>
+                💬 <b>Message:</b> {{ msg[3] }}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No messages yet.</p>
+    {% endif %}
+
+    <a href="{{ url_for('admin_dashboard') }}">Back to Admin Dashboard</a>
+</div>
+</body>
+</html>

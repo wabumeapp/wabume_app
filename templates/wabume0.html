@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WABUME - WhatsApp Bulk Messenger</title>
+    <style>
+        /* --- Colors --- */
+        :root {
+            --primary-dark: #075E54;
+            --primary-color: #128C7E;
+            --secondary-color: #25D366;
+            --accent-color: #1AB5D0;
+            --background-color: #F0F2F5;
+            --card-color: #FFFFFF;
+            --text-color: #3B4A54;
+            --light-text: #667781;
+            --border-color: #E0E0E0;
+            --error-color: #D21B2A;
+            --success-color: #4CAF50;
+            --warning-color: #EE0707;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--primary-dark);
+            border-radius: 10px;
+            border: 2px solid var(--background-color);
+        }
+
+        /* --- Header Gradient --- */
+        .header {
+            background: linear-gradient(to bottom, #075E54, #128C7E);
+            padding: 30px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin: 10px 0 5px;
+        }
+        .header h3 {
+            font-size: 14px;
+            font-weight: normal;
+            margin: 0;
+        }
+        .header .icon {
+            font-size: 38px;
+        }
+
+        /* --- Container --- */
+        .container {
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* --- Card --- */
+        .card {
+            background-color: var(--card-color);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .card h2 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        /* --- Textarea --- */
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            resize: vertical;
+            background-color: var(--card-color);
+            color: var(--text-color);
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        /* --- Input fields --- */
+        input[type="text"], input[type="file"], select {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        /* --- Radio Buttons --- */
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        /* --- Progress Bar --- */
+        .progress-container {
+            background-color: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 18px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s;
+        }
+
+        /* --- Info Label --- */
+        .info-label {
+            font-size: 12px;
+            color: var(--light-text);
+            margin-top: 5px;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--light-text);
+            margin: 30px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="icon">📱</div>
+        <h1>WHATSAPP BULK MESSENGER</h1>
+        <h3>Send messages professionally at scale</h3>
+    </div>
+
+    <div class="container">
+
+        <!-- Phone Numbers -->
+        <div class="card">
+            <h2>📞 PHONE NUMBERS</h2>
+            <textarea placeholder="Enter phone numbers, one per line..."></textarea>
+            <input type="file" accept=".xlsx" />
+            <button class="btn">📂 IMPORT EXCEL</button>
+        </div>
+
+        <!-- Message Content -->
+        <div class="card">
+            <h2>💬 MESSAGE CONTENT</h2>
+            <textarea placeholder="Type your message here..."></textarea>
+            <input type="file" />
+        </div>
+
+        <!-- Sending Options -->
+        <div class="card">
+            <h2>⚙️ SENDING MODE</h2>
+            <div class="radio-group">
+                <label><input type="radio" name="mode" value="manual"> Manual</label>
+                <label><input type="radio" name="mode" value="auto"> Auto</label>
+                <label><input type="radio" name="mode" value="batch"> Batch</label>
+            </div>
+
+            <div>
+                <label>Delay (seconds):</label>
+                <input type="text" placeholder="2">
+            </div>
+            <div>
+                <label>Batch Size:</label>
+                <input type="text" placeholder="5">
+            </div>
+            <div>
+                <label>Pause between batches (minutes):</label>
+                <input type="text" placeholder="30">
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="card">
+            <button class="btn">▶ START</button>
+            <button class="btn" style="background-color:black;">⛔ STOP</button>
+        </div>
+
+        <!-- Progress -->
+        <div class="card">
+            <h2>📊 PROGRESS</h2>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="info-label">Last number sent: None</div>
+            <div class="info-label">0 / 0</div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        © 2026 WABUME - WhatsApp Bulk Messenger
+    </div>
+
+</body>
+</html>

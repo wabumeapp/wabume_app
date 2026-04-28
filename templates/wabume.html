@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Bulk Messenger</title>
+    <style>
+        /* ==== Global Styles ==== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: #f2f2f2;
+            color: #333;
+        }
+        button {
+            cursor: pointer;
+        }
+
+        /* ==== Main Container ==== */
+        .main-container {
+            width: 95%;
+            max-width: 900px;
+            margin: 20px auto;
+            padding-bottom: 30px;
+        }
+
+        /* ==== Header ==== */
+        .header-gradient {
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .header-title {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        /* ==== Sections ==== */
+        .section-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+        }
+        .section-card h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #4b6cb7;
+        }
+        textarea {
+            width: 100%;
+            min-height: 80px;
+            resize: vertical;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        /* ==== Buttons ==== */
+        .btn-primary {
+            background-color: #4b6cb7;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .btn-primary:hover {
+            background-color: #3a53a0;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .btn-start {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .btn-start:hover {
+            background-color: #218838;
+        }
+        .btn-pause {
+            background-color: #dc3545;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .btn-pause:hover {
+            background-color: #c82333;
+        }
+
+        /* ==== Mode Options ==== */
+        .mode-options label {
+            margin-right: 15px;
+            font-size: 14px;
+        }
+        .mode-inputs {
+            margin-top: 10px;
+        }
+        .auto-distribute {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* ==== Progress ==== */
+        .progress-container {
+            width: 100%;
+            background-color: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            height: 20px;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #28a745;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            transition: width 0.3s ease;
+        }
+        #progress-text, #last-number-label {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* ==== File input ==== */
+        #file-path {
+            background-color: #f9f9f9;
+        }
+
+        /* ==== Responsive ==== */
+        @media (max-width: 600px) {
+            .header-title {
+                font-size: 22px;
+            }
+            .header-icon {
+                font-size: 30px;
+            }
+        }
+
+        /* --- Footer --- */
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--light-text);
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+
+        <!-- Header with Gradient -->
+        <header class="header-gradient">
+            <div class="header-content">
+                <div class="header-icon">📱</div>
+                <h1 class="header-title">WHATSAPP BULK MESSENGER</h1>
+                <p class="header-subtitle">Send messages professionally at scale</p>
+            </div>
+        </header>
+
+        <!-- Content Container -->
+        <form id="wabume-form">
+
+            <!-- Phone Numbers Section -->
+            <section class="section-card" id="numbers-section">
+                <h2>📞 PHONE NUMBERS</h2>
+                <textarea id="numbers-text" placeholder="Enter numbers, one per line"></textarea>
+                <button id="load-excel-btn" class="btn-primary">📂 IMPORT EXCEL</button>
+            </section>
+
+            <!-- Message Content Section -->
+            <section class="section-card" id="message-section">
+                <h2>💬 MESSAGE CONTENT</h2>
+                <textarea id="message-text" placeholder="Type your message here..."></textarea>
+                <input type="text" id="file-path" placeholder="No file selected" readonly>
+                <button id="select-file-btn" class="btn-secondary">📎 SELECT FILE</button>
+            </section>
+
+            <!-- Sending Mode Section -->
+            <section class="section-card" id="mode-section">
+                <h2>⚙️ SENDING MODE</h2>
+                <div class="mode-options">
+                    <label><input type="radio" name="mode" value="manual" checked> Manual</label>
+                    <label><input type="radio" name="mode" value="batch"> Batch</label>
+                    <label><input type="radio" name="mode" value="auto"> Auto</label>
+                </div>
+
+                <div class="mode-inputs" id="manual-inputs">
+                    <label>Delay (seconds): <input type="number" id="delay-input" min="2" value="3"></label>
+                </div>
+
+                <div class="mode-inputs" id="batch-inputs" style="display:none;">
+                    <label>Batch Size: <input type="number" id="batch-size-input" min="1" max="8" value="5"></label>
+                    <label>Pause (hours): <input type="number" id="pause-input" min="15" max="60" value="16"></label>
+                </div>
+
+                <div class="auto-distribute" id="auto-label">
+                    🔁 Messages will be automatically distributed over the day.
+                </div>
+            </section>
+
+            <!-- Progress & Controls Section -->
+            <section class="section-card" id="progress-section">
+                <h2>📊 PROGRESS</h2>
+                <div class="progress-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <p id="progress-text">0 / 0</p>
+                <p id="last-number-label">Last number sent: None</p>
+                <button type="submit" class="btn-start">▶ Start Campaign</button>
+                <button id="pause-btn" class="btn-pause">⛔ Stop</button>
+            </section>
+
+            <!-- Info Label -->
+            <p id="info-label"></p>
+        </div>
+    </div>
+
+    <script>
+        // ==== JS to toggle mode inputs ====
+        const manualInputs = document.getElementById('manual-inputs');
+        const batchInputs = document.getElementById('batch-inputs');
+        const radios = document.querySelectorAll('input[name="mode"]');
+
+        radios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.value === 'manual') {
+                    manualInputs.style.display = 'block';
+                    batchInputs.style.display = 'none';
+                } else if (radio.value === 'batch') {
+                    manualInputs.style.display = 'none';
+                    batchInputs.style.display = 'block';
+                } else {
+                    manualInputs.style.display = 'none';
+                    batchInputs.style.display = 'none';
+                }
+            });
+        });
+
+document.getElementById("wabume-form").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const numbers = document.getElementById("numbers-text").value;
+    const message = document.getElementById("message-text").value;
+    const delay = document.getElementById("delay-input").value;
+
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+
+    const batch_size = document.getElementById("batch-size-input").value;
+    const pause = document.getElementById("pause-input").value;
+
+    const data = {
+        numbers: numbers,
+        message: message,
+        delay: delay,
+        mode: mode,
+        batch_size: batch_size,
+        pause: pause
+    };
+
+    const response = await fetch("/run_wabume", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    document.getElementById("info-label").innerText = result.message;
+
+});
+    </script>
+    <div class="footer">
+        © 2026 WABUME - WhatsApp Bulk Messenger
+    </div>
+</body>
+</html>
